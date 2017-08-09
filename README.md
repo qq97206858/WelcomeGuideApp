@@ -1,1 +1,2 @@
-# welcomdeGuideApp
+# welcomeGuideApp
+#这个应用主要是新用户引导以及列表动画等功能》后面后有更多功能不断的添加进来
