@@ -34,9 +34,13 @@
     </LinearLayout>
 
     <ListView
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:id="@+id/lv_main"
         android:layout_width="match_parent"
-
+        android:divider="#ffffffff"
+        android:dividerHeight="4dp"
+        android:listSelector="#eeeeee"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_btn"/>
 

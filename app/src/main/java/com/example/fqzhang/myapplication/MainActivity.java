@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,6 +21,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,6 +37,7 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,29 +45,33 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fqzhang.myapplication.fragment.MDialogFragment;
+
 import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
     private List<String> datas = new ArrayList<>();
-    private TextView reloadTextView,getfirstVisibleTv,chatTextView,emailTextView,telTextView;
+    private TextView reloadTextView, getfirstVisibleTv, chatTextView, emailTextView, telTextView;
     private ListView showlistView;
     private MyAdapter mAdapter;
-    private  boolean isReLoad;
+    private boolean isReLoad;
     private LinearLayout bottomView;
     private float moveY = 0.0f;
     private boolean isVisible = false;
     private PopupWindow pop;
     private SharedPreferences sp;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -72,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private boolean isFirstShow = false;
     private FloatingActionButton fab;
+
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,28 +110,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("MainActivity", "onStart");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-       // bindData();
+        Log.e("MainActivity", "onResume");
     }
-    private void  showDialog(){
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("MainActivity", "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("MainActivity", "onStop");
+    }
+
+    private void showDialog() {
         //isReLoad = true;
         int alertDialogStyle = R.attr.alertDialogStyle;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog);
+/*        AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog);
         builder.setIcon(android.R.drawable.btn_dialog)
                 .setTitle("提醒")
                 .setMessage("hello world!")
                 .setCancelable(true)
-                .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               // bindData();
+                // bindData();
             }
         });
-        builder.create().show();
-
-
+        builder.create().show();*/
+        MDialogFragment dialogFragment = MDialogFragment.newInstance();
+        android.app.FragmentManager fragmentManager = getFragmentManager();
+        android.app.FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.add(dialogFragment, "mdialogFragment");
+        ft.commit();
     }
+
     private void setListener() {
         reloadTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 initData();
                 mAdapter.setDatas(datas);
                 mAdapter.notifyDataSetChanged();
-                Log.e("zfq","重新绑定了");
+                Log.e("zfq", "重新绑定了");
                 showDialog();
             }
         });
@@ -140,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int headerViewsCount = showlistView.getHeaderViewsCount();
                 final int firstVisiblePosition = showlistView.getFirstVisiblePosition();
-                Toast.makeText(MainActivity.this,headerViewsCount+":"+firstVisiblePosition,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, headerViewsCount + ":" + firstVisiblePosition, Toast.LENGTH_SHORT).show();
                 showlistView.setSelection(1);
                 // showlistView.scrollTo(0,0);
                 int top = (showlistView.getChildAt(0) == null) ? 0 : v.getTop();
@@ -161,12 +192,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.e("zfq",firstVisibleItem+":"+visibleItemCount+":"+totalItemCount);
+                Log.e("zfq", firstVisibleItem + ":" + visibleItemCount + ":" + totalItemCount);
+            }
+        });
+        showlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int pos = position - 1;
+                if (!datas.get(pos).contains(":")) {
+                    view.setEnabled(false);
+                    return;
+                }
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("position", pos);
+                bundle.putString("detail", datas.get(pos));
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         showlistView.setOnTouchListener(new View.OnTouchListener() {
             private float lastY = 0;
             private float startY = 0;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int motionEvent = event.getActionMasked();
@@ -193,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (pop != null && pop.isShowing()) {
-                    sp.edit().putBoolean("isFirstShow",true).commit();
+                    sp.edit().putBoolean("isFirstShow", true).commit();
                     pop.dismiss();
                     pop = null;
                 }
@@ -202,12 +250,12 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"this is a floatActionButton!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "this is a floatActionButton!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void showPop(){
+    private void showPop() {
         sp = getPreferences(Context.MODE_APPEND);
         boolean isFirstShow = sp.getBoolean("isFirstShow", false);
         if (!isFirstShow) {
@@ -215,27 +263,29 @@ public class MainActivity extends AppCompatActivity {
             tv.setTextColor(Color.parseColor("#aaddee"));
             tv.setText("点这里，开始聊天！");
             tv.setTextSize(16);
-            pop = new PopupWindow(tv,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            pop = new PopupWindow(tv, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             pop.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#eeeeee")));
             pop.setOutsideTouchable(false);
             pop.setFocusable(false);
-            pop.showAsDropDown(reloadTextView, 15,0);
+            pop.showAsDropDown(reloadTextView, 15, 0);
         }
     }
+
     private void doTopAndBottomAnimation(int deltaY) {
-            if (deltaY > 0 && isVisible) {
-                isVisible = false;
-                moveY = moveY - 0;
-                //topViewInAnimation(350);
-                bottomViewInAnimation(350);
-            }
-            if (deltaY < 0 && !isVisible) {
-                isVisible = true;
-                moveY = moveY + 0;
-                //topViewOutAnimation();
-                bottomViewOutAnimation();
-            }
+        if (deltaY > 0 && isVisible) {
+            isVisible = false;
+            moveY = moveY - 0;
+            //topViewInAnimation(350);
+            bottomViewInAnimation(350);
+        }
+        if (deltaY < 0 && !isVisible) {
+            isVisible = true;
+            moveY = moveY + 0;
+            //topViewOutAnimation();
+            bottomViewOutAnimation();
+        }
     }
+
     public void bottomViewInAnimation(int durationTime) {
         final ObjectAnimator animPushIn = ObjectAnimator.ofFloat(bottomView, "translationY", bottomView.getHeight(), 0);
         animPushIn.setInterpolator(new LinearInterpolator());
@@ -249,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         animPushOut.setDuration(350);
         animPushOut.start();
     }
+
     private void bindData(boolean isReload) {
 
         if (isReload) {
@@ -259,9 +310,9 @@ public class MainActivity extends AppCompatActivity {
             mAdapter.setDatas(list);
             mAdapter.notifyDataSetInvalidated();
         } else {
-            mAdapter = new MyAdapter(datas,this);
+            mAdapter = new MyAdapter(datas, this);
             //showlistView.setLayoutAnimation(getAnimationController());
-            showlistView.addHeaderView(View.inflate(this,R.layout.listheader,null));
+            showlistView.addHeaderView(View.inflate(this, R.layout.listheader, null));
             showlistView.setAdapter(mAdapter);
 
         }
@@ -270,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         reloadTextView = (TextView) findViewById(R.id.tv_reload);
         showlistView = (ListView) findViewById(R.id.lv_main);
+        //showlistView.setSelector(R.drawable.itemselector);
         bottomView = (LinearLayout) findViewById(R.id.bottom_layout);
         getfirstVisibleTv = (TextView) findViewById(R.id.tv_getFirstVisible);
         chatTextView = (TextView) findViewById(R.id.tv_chat);
@@ -283,19 +335,19 @@ public class MainActivity extends AppCompatActivity {
     private void initData() {
         datas.clear();
         Random r = new Random();
-        for (int i=0;i<30; i++){
+        for (int i = 0; i < 30; i++) {
             int num = r.nextInt(50);
-            if(i<10) {
-                datas.add("张三"+num+":"+"张三 hello world"+num);
-            } else if(i< 20) {
-                datas.add("钱一"+num+":"+"钱一 hello world"+num);
+            if (i < 10) {
+                datas.add("张三" + num + ":" + "张三 hello world" + num);
+            } else if (i < 20) {
+                datas.add("钱一" + num + ":" + "钱一 hello world" + num);
             } else {
-                datas.add("王二"+num+":"+"王二 hello world"+num);
+                datas.add("王二" + num + ":" + "王二 hello world" + num);
             }
         }
-        datas.add(0,"Z");
-        datas.add(11,"Q");
-        datas.add(22,"Q");
+        datas.add(0, "Z");
+        datas.add(11, "Q");
+        datas.add(22, "Q");
     }
 
     class MyAdapter extends BaseAdapter {
@@ -304,8 +356,9 @@ public class MainActivity extends AppCompatActivity {
         private final int TYPE_CHAR = 1;
         private List<String> datas;
         private LayoutInflater inflater;
-        private  Context context;
-        public MyAdapter(List datas,Context context){
+        private Context context;
+
+        public MyAdapter(List datas, Context context) {
             this.datas = datas;
             this.context = context;
             inflater = LayoutInflater.from(context);
@@ -313,8 +366,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemViewType(int position) {
-            if (!datas.get(position).contains(":")){
-                return  TYPE_CHAR;
+            if (!datas.get(position).contains(":")) {
+                return TYPE_CHAR;
             } else {
                 return TYPE_NORMAL;
             }
@@ -348,13 +401,13 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolderNormal holder = null;
             ViewHolderType holderType = null;
-            if (getItemViewType(position) == TYPE_NORMAL){
+            if (getItemViewType(position) == TYPE_NORMAL) {
                 if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.item,null,false);
+                    convertView = inflater.inflate(R.layout.item, null, false);
                     holder = new ViewHolderNormal();
-                    findView(TYPE_NORMAL,convertView,holder);
+                    findView(TYPE_NORMAL, convertView, holder);
                     convertView.setTag(holder);
-                    setItemAnim(convertView,position);
+                    setItemAnim(convertView, position);
                 } else {
                     holder = (ViewHolderNormal) convertView.getTag();
                 }
@@ -363,12 +416,12 @@ public class MainActivity extends AppCompatActivity {
                 holder.tvConversation.setText(data[1]);
             } else {
                 if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.type,null,false);
+                    convertView = inflater.inflate(R.layout.type, null, false);
                     holderType = new ViewHolderType();
-                    findView(TYPE_CHAR,convertView,holderType);
+                    findView(TYPE_CHAR, convertView, holderType);
                     convertView.setTag(holderType);
-                    setItemAnim(convertView,position);
-                }else {
+                    setItemAnim(convertView, position);
+                } else {
                     holderType = (ViewHolderType) convertView.getTag();
                 }
                 holderType.tvType.setText(datas.get(position));
@@ -376,27 +429,29 @@ public class MainActivity extends AppCompatActivity {
             return convertView;
         }
 
-        private void findView(int type,View convertView, ViewHolder holder) {
-            if(type == TYPE_NORMAL) {
+        private void findView(int type, View convertView, ViewHolder holder) {
+            if (type == TYPE_NORMAL) {
 
-                ((ViewHolderNormal)holder).tvName = (TextView) convertView.findViewById(R.id.tv_name);
-                ((ViewHolderNormal)holder).tvConversation = (TextView) convertView.findViewById(R.id.tv_item);
+                ((ViewHolderNormal) holder).tvName = (TextView) convertView.findViewById(R.id.tv_name);
+                ((ViewHolderNormal) holder).tvConversation = (TextView) convertView.findViewById(R.id.tv_item);
             } else {
-                ((ViewHolderType)holder).tvType = (TextView)convertView.findViewById(R.id.tv_type);
+                ((ViewHolderType) holder).tvType = (TextView) convertView.findViewById(R.id.tv_type);
             }
         }
 
-        class ViewHolderNormal implements ViewHolder{
+        class ViewHolderNormal implements ViewHolder {
             TextView tvName;
             TextView tvConversation;
         }
-        class ViewHolderType implements ViewHolder{
+
+        class ViewHolderType implements ViewHolder {
             TextView tvType;
         }
-        private void setItemAnim(View convertView,int position) {
+
+        private void setItemAnim(View convertView, int position) {
 
             Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.bottom_to_top);
-            animation1.setStartOffset(100*position);
+            animation1.setStartOffset(100 * position);
             animation1.setFillAfter(true);
             AnimationSet set = new AnimationSet(false);
      /*       if (position%2 == 0) {
@@ -416,10 +471,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (pop != null && pop.isShowing()){
+        if (pop != null && pop.isShowing()) {
             pop.dismiss();
             pop = null;
         }
+        Log.e("MainActivity", "onDestroy");
     }
 
     /**
@@ -428,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
      * @return
      */
     protected LayoutAnimationController getAnimationController() {
-        int duration=500;
+        int duration = 500;
         AnimationSet set = new AnimationSet(true);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
@@ -445,10 +501,12 @@ public class MainActivity extends AppCompatActivity {
         controller.setOrder(LayoutAnimationController.ORDER_NORMAL);
         return controller;
     }
-    interface ViewHolder{
+
+    interface ViewHolder {
 
     }
-    public static void initFragment(FragmentManager fragmentManager, Fragment targetFragment, String tag, int postion){
+
+    public static void initFragment(FragmentManager fragmentManager, Fragment targetFragment, String tag, int postion) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(postion, targetFragment, tag);
         transaction.commitAllowingStateLoss();

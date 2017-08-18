@@ -1,19 +1,32 @@
 package com.example;
 
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+import java.util.Scanner;
 
 public class MyClass implements Cloneable{
-/*    public static  void main (String[] args) {
-        try {
-            Object clone = new MyClass().clone();
-            System.out.println(((MyClass)clone).Var);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-    }*/
+    public static void main(String[] args) {
+        String[] strs = {"我们都有一个个家就","夏威夷*火奴奴鲁鲁了"};
+        dealOverLength4CityName(strs);
+        System.out.println(strs[0]);
+        System.out.println(strs[1]);
+    }
+    private static void dealOverLength4CityName (String[] cityNames) {
+        String departCity = cityNames[0];
+        String arriveCity =cityNames[1];
+            if (departCity.length()+arriveCity.length() > 12) {
+                if (departCity.length() > 6){
+                    cityNames[0] = departCity.replace(departCity.charAt(6)+"","\n"+departCity.charAt(6));
+                }
+                if (arriveCity.length() > 6) {
+                    cityNames[1] = arriveCity.replace(arriveCity.charAt(6)+"","\n"+arriveCity.charAt(6));
+                }
+            }
 
+    }
     public String Var;
     public MyClass () {
         Var = "你好";
@@ -23,12 +36,12 @@ public class MyClass implements Cloneable{
     protected Object clone() throws CloneNotSupportedException {
         return new MyClass();
     }
-    public void method () {
+ /*    public void method () {
         MObservable mObservable = new MObservable();
         mObservable.addObserver(new MObserver());
-        mObservable.notifyObservers();mObservable.hasChanged()
+        mObservable.notifyObservers();
     }
-    class MObservable extends  Observable {
+   class MObservable extends  Observable {
         @Override
         protected synchronized void setChanged() {
             super.setChanged();super.changed = true;
@@ -39,5 +52,5 @@ public class MyClass implements Cloneable{
         public void update(Observable observable, Object o) {
 
         }
-    }
+    }*/
 }

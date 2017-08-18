@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/dialog_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="25dp"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical">
+    <!---->
+<!--    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+    </ScrollView>-->
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp">
+
+            <TextView
+                android:id="@+id/titel_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="提示"
+                android:textColor="#333333"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/content_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="8dip"
+                android:text="该航班已临近起飞时间，请确保您能及时值机、登机，因误机产生的损失自行承担。"
+                android:textColor="#333333"
+                android:textSize="15dp"/>
+
+            <!-- 子文本内容-->
+            <TextView
+                android:id="@+id/subContent_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="5dip"
+                android:text="支付成功5分钟内确认出票结果，若出票失败，订单自动取消并退款。"
+                android:textColor="#999999"
+                android:textSize="12dp"
+                android:visibility="visible"
+                tools:visibility="visible"/>
+        </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#d2d2da"
+            android:gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/left_btn"
+                style="@style/text_15_009fde"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_btn_dialog_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="取消"/>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="#d2d2da"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/right_btn"
+                style="@style/text_15_009fde"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_btn_dialog_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="确认"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
