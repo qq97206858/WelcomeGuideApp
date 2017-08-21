@@ -1,22 +1,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.example.fqzhang.myapplication.fragment.DetailFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:zfq="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:weightSum="1">
 
     <!-- TODO: Update blank fragment layout -->
     <Button
         android:id="@+id/show_dialog_btn"
-        android:text="弹对话框"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="弹对话框"/>
+
+    <Button
+        android:id="@+id/downLoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开始下载"/>
+
     <TextView
         android:id="@+id/show_detail_tv"
-        android:textSize="20sp"
-        android:layout_marginTop="4dp"
-        android:padding="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_marginTop="4dp"
+        android:padding="4dp"
+        android:text="@string/hello_blank_fragment"
+        android:textSize="20sp"/>
+
+    <com.example.fqzhang.myapplication.view.PercentView
+        android:id="@+id/percentview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="#ffff00"
+        android:padding="5dp"
+        zfq:percent_circel_radius="50dp"
+        zfq:precent_background_color="@android:color/darker_gray"
+        zfq:precent_circel_gravity="center"
+        zfq:precent_circel_progress="50"
+        zfq:precent_progress_color="@android:color/holo_red_dark"
+        />
+
+    <TextView
+        android:id="@+id/onclick"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="onClick"
+        />
+    <com.example.fqzhang.myapplication.view.RandomNumView
+        android:id="@+id/randomNum"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:padding="15dp"
+        zfq:BackgroundColor="@android:color/darker_gray"
+        zfq:RandomNumColor="@android:color/holo_blue_dark"
+        zfq:RandomNumSize="25dp"
+        zfq:RandomNumText="你好!!!"
+        />
+    <com.example.fqzhang.myapplication.view.TestView
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        zfq:exampleColor="#ff00ff"
+        zfq:exampleString="hello Test"
+        zfq:exampleDimension="30dp"
+        zfq:exampleDrawable="@android:drawable/sym_action_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

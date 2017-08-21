@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="RandomNumView">
+        <attr name="RandomNumSize" format="dimension"/>
+        <attr name="RandomNumColor" format="color"/>
+        <attr name="BackgroundColor" format="color"/>
+        <attr name="RandomNumText" format="string"/>
+    </declare-styleable>
+</resources>

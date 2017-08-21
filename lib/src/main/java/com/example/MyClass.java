@@ -10,9 +10,15 @@ import java.util.Scanner;
 public class MyClass implements Cloneable{
     public static void main(String[] args) {
         String[] strs = {"我们都有一个个家就","夏威夷*火奴奴鲁鲁了"};
-        dealOverLength4CityName(strs);
-        System.out.println(strs[0]);
-        System.out.println(strs[1]);
+         Object obj = new Object(){
+            {
+                System.out.println("代码块！！！");
+            }
+             @Override
+             public String toString() {
+                 return super.toString();
+             }
+         };
     }
     private static void dealOverLength4CityName (String[] cityNames) {
         String departCity = cityNames[0];
@@ -53,4 +59,10 @@ public class MyClass implements Cloneable{
 
         }
     }*/
+    enum Season{
+     Summer,
+     Winter,
+     Spring,
+     Autumn
+ }
 }

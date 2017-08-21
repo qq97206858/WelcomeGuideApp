@@ -18,10 +18,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fqzhang.myapplication.MainActivity;
 import com.example.fqzhang.myapplication.R;
 import com.example.fqzhang.myapplication.Util.FragmentExchangeController;
+import com.example.fqzhang.myapplication.view.PercentView;
+import com.example.fqzhang.myapplication.view.RandomNumView;
+
+import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,8 +41,12 @@ import com.example.fqzhang.myapplication.Util.FragmentExchangeController;
  * create an instance of this fragment.
  */
 public class DetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+  /*  @BindView(R.id.randomNum)
+    public RandomNumView randomNumView;*/
+    @BindView(R.id.show_dialog_btn)
+    public Button btn;
+    @BindView(R.id.onclick)
+    public TextView tv;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -44,7 +57,6 @@ public class DetailFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public DetailFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -80,15 +92,22 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, new FrameLayout(getActivity()), false);
         TextView detail = (TextView) view.findViewById(R.id.show_detail_tv);
-        Button btn = (Button) view.findViewById(R.id.show_dialog_btn);
+/*        Button btn = (Button) view.findViewById(R.id.show_dialog_btn);*/
+        detail.setText("position:"+mParam2+":::"+mParam1);
+        Log.e("detailFragment","----onCreateView");
+        ButterKnife.bind(this,view);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog();
             }
         });
-        detail.setText("position:"+mParam2+":::"+mParam1);
-        Log.e("detailFragment","----onCreateView");
+/*        percentView.setChangeProgresslistener(new PercentView.OnChangeProgressListener() {
+            @Override
+            public void onChangeProgress(PercentView view) {
+
+            }
+        });*/
         return view;
     }
     public void showDialog(){
@@ -146,7 +165,23 @@ public class DetailFragment extends Fragment {
         super.onDestroyView();
         Log.e("detailFragment","----onDestroyView");
     }
+/*    @OnClick(R.id.downLoad)
+    public void load(){
 
+    }*/
+    boolean flag = false;
+    @OnClick(R.id.onclick)
+    public  void onclick() {
+        Toast.makeText(getActivity(),"点击了！！",Toast.LENGTH_SHORT).show();
+    }
+/*    @OnClick(R.id.randomNum)
+    public void randomNum(){
+        if (flag) {
+
+        } else {
+
+        }
+    }*/
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

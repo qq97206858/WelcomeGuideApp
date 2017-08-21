@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import com.example.fqzhang.myapplication.fragment.DetailFragment;
 
 public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener {
+
     private Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

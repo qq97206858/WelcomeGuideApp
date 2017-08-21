@@ -11,4 +11,5 @@
         <item name="android:textSize">15dip</item>
         <item name="android:textColor">#009fde</item>
     </style>
+
 </resources>

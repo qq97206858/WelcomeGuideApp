@@ -2,28 +2,22 @@ package com.example.fqzhang.myapplication;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,22 +39,18 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fqzhang.myapplication.Util.CustomTranslateUtil;
 import com.example.fqzhang.myapplication.fragment.MDialogFragment;
 
-import org.w3c.dom.Text;
-
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.zip.Inflater;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    private List<View> transitionViewList = new ArrayList<>();
     private List<String> datas = new ArrayList<>();
     private TextView reloadTextView, getfirstVisibleTv, chatTextView, emailTextView, telTextView;
     private ListView showlistView;
@@ -79,13 +69,12 @@ public class MainActivity extends AppCompatActivity {
     };
     private boolean isFirstShow = false;
     private FloatingActionButton fab;
-
+    private View mTopView;
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initData();
         initView();
         bindData(false);
@@ -119,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.e("MainActivity", "onResume");
+        clearListTransitionAnims();
     }
 
     @Override
@@ -197,18 +187,29 @@ public class MainActivity extends AppCompatActivity {
         });
         showlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int pos = position - 1;
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final int pos = position - 1;
                 if (!datas.get(pos).contains(":")) {
                     view.setEnabled(false);
                     return;
                 }
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("position", pos);
-                bundle.putString("detail", datas.get(pos));
-                intent.putExtras(bundle);
-                startActivity(intent);
+                //TODO 动画
+                startExitTransition(showlistView,position,300);
+  /*              CustomTranslateUtil.getInstance().hideViewWithAlpha(view, CustomTranslateUtil.DOWN_TO_TOP, 300, 200, true);
+                transitionViewList.add(view);*/
+
+                showlistView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("position", pos);
+                        bundle.putString("detail", datas.get(pos));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        MainActivity.this.overridePendingTransition(0,0);
+                    }
+                },300);
             }
         });
         showlistView.setOnTouchListener(new View.OnTouchListener() {
@@ -319,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        mTopView = findViewById(R.id.ll_btn);
         reloadTextView = (TextView) findViewById(R.id.tv_reload);
         showlistView = (ListView) findViewById(R.id.lv_main);
         //showlistView.setSelector(R.drawable.itemselector);
@@ -399,33 +401,33 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolderNormal holder = null;
-            ViewHolderType holderType = null;
+            boolean hasConvertView = convertView != null;
+            ViewHolder holder = null;
             if (getItemViewType(position) == TYPE_NORMAL) {
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.item, null, false);
-                    holder = new ViewHolderNormal();
-                    findView(TYPE_NORMAL, convertView, holder);
+                    holder = new ViewHolderNormal(convertView);
+                    //findView(TYPE_NORMAL, convertView, holder);
                     convertView.setTag(holder);
-                    setItemAnim(convertView, position);
+                    //setItemAnim(convertView, position);
                 } else {
                     holder = (ViewHolderNormal) convertView.getTag();
                 }
                 String[] data = datas.get(position).split(":");
-                holder.tvName.setText(data[0]);
-                holder.tvConversation.setText(data[1]);
+                ((ViewHolderNormal)holder).tvName.setText(data[0]);
+                ((ViewHolderNormal)holder).tvItem.setText(data[1]);
             } else {
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.type, null, false);
-                    holderType = new ViewHolderType();
-                    findView(TYPE_CHAR, convertView, holderType);
-                    convertView.setTag(holderType);
-                    setItemAnim(convertView, position);
+                    holder = new ViewHolderType(convertView);
+                   // findView(TYPE_CHAR, convertView, holderType);
+                    convertView.setTag(holder);
                 } else {
-                    holderType = (ViewHolderType) convertView.getTag();
+                    holder = (ViewHolderType) convertView.getTag();
                 }
-                holderType.tvType.setText(datas.get(position));
+                ((ViewHolderType)holder).tvType.setText(datas.get(position));
             }
+            setItemAnim(convertView, position,hasConvertView);
             return convertView;
         }
 
@@ -433,27 +435,39 @@ public class MainActivity extends AppCompatActivity {
             if (type == TYPE_NORMAL) {
 
                 ((ViewHolderNormal) holder).tvName = (TextView) convertView.findViewById(R.id.tv_name);
-                ((ViewHolderNormal) holder).tvConversation = (TextView) convertView.findViewById(R.id.tv_item);
+                ((ViewHolderNormal) holder).tvItem = (TextView) convertView.findViewById(R.id.tv_item);
             } else {
                 ((ViewHolderType) holder).tvType = (TextView) convertView.findViewById(R.id.tv_type);
             }
         }
 
         class ViewHolderNormal implements ViewHolder {
+            @BindView(R.id.tv_name)
             TextView tvName;
-            TextView tvConversation;
+            @BindView(R.id.tv_item)
+            TextView tvItem;
+
+            public ViewHolderNormal(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
 
         class ViewHolderType implements ViewHolder {
+            @BindView(R.id.tv_type)
             TextView tvType;
+
+            ViewHolderType(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
 
-        private void setItemAnim(View convertView, int position) {
-
-            Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.bottom_to_top);
-            animation1.setStartOffset(100 * position);
-            animation1.setFillAfter(true);
-            AnimationSet set = new AnimationSet(false);
+        private void setItemAnim(View convertView, int position,boolean hasConvertView) {
+            if (!hasConvertView) {
+                convertView.clearAnimation();
+                Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.bottom_to_top);
+                animation1.setStartOffset(100 * position);
+                animation1.setFillAfter(true);
+                AnimationSet set = new AnimationSet(false);
      /*       if (position%2 == 0) {
                 Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.right_to_left);
 
@@ -462,9 +476,10 @@ public class MainActivity extends AppCompatActivity {
                 Animation animation3 = AnimationUtils.loadAnimation(context, R.anim.left_to_right);
                 set.addAnimation(animation3);
             }*/
-            //set.setStartOffset(200*position);
-            set.addAnimation(animation1);
-            convertView.setAnimation(set);
+                //set.setStartOffset(200*position);
+                set.addAnimation(animation1);
+                convertView.setAnimation(set);
+            }
         }
     }
 
@@ -510,5 +525,58 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(postion, targetFragment, tag);
         transaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * 清楚listview动画集合
+     */
+    private void clearListTransitionAnims() {
+        if (null != showlistView) {
+            showlistView.clearDisappearingChildren();
+        }
+        for (View view : transitionViewList) {
+            view.clearAnimation();
+        }
+        transitionViewList.clear();
+    }
+
+
+    /**
+     * 进中间页或下一程的动画
+     *
+     * @param adapterView
+     * @param position
+     * @param duration
+     */
+    private void startExitTransition(AdapterView<?> adapterView, int position, int duration) {
+        int firstPosition = adapterView.getFirstVisiblePosition();
+        int endPosition = adapterView.getLastVisiblePosition();
+
+        for (int i = firstPosition; i <= endPosition; i++) {
+            int index = i - firstPosition;
+            View itemView = adapterView.getChildAt(index);
+            if (i < position) {
+             CustomTranslateUtil.getInstance().hideViewWithAlpha(itemView, CustomTranslateUtil.DOWN_TO_TOP, duration, 200, true);
+                transitionViewList.add(itemView);
+            } else if (i > position) {
+                CustomTranslateUtil.getInstance().hideViewWithAlpha(itemView, CustomTranslateUtil.TOP_TO_DOWN, duration, 200, true);
+                transitionViewList.add(itemView);
+            }
+        }
+
+        // fade out top and bottom view
+        AlphaAnimation fadeAnim = new AlphaAnimation(1, 0);
+        fadeAnim.setFillAfter(true);
+        fadeAnim.setDuration(200);
+
+        if (mTopView.getVisibility() == View.VISIBLE) {
+            mTopView.startAnimation(fadeAnim);
+            transitionViewList.add(mTopView);
+        }
+
+        if (bottomView.getVisibility() == View.VISIBLE) {
+            bottomView.startAnimation(fadeAnim);
+            transitionViewList.add(bottomView);
+        }
     }
 }
