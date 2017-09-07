@@ -9,13 +9,36 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.fqzhang.myapplication.fragment.DetailFragment;
+import com.example.fqzhang.myapplication.view.TextImage;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static android.R.id.list;
+import static android.R.id.text1;
 
 public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener {
-
+    static class T {
+        public List<String> text = new ArrayList<>()/* Arrays.asList(new String[]{"dd","dd"})*/;
+    }
+    public static void main(String[] args) {
+        T t = new T();
+        t.text.add("dd");
+        t.text.add("dd");
+        method(t.text);
+        System.out.println(t.text);
+    }
+    public static void method(List<String> text){
+        /*text = Arrays.asList(new String[]{"xx","xx"});*/
+        text.add("kk");
+        text.add("kk");
+    }
     private Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

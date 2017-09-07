@@ -33,11 +33,11 @@ public class MDialogFragment extends DialogFragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         FrameLayout layout = new FrameLayout(getActivity());
-        layout.setClickable(true);
-        View view = inflater.inflate(R.layout.dialog_excute_layout,null);
-        layout.addView(view);
+       /* layout.setClickable(true);*/
+        View view = inflater.inflate(R.layout.dialog_excute_layout,layout,false);
+       // layout.addView(view);
         initView(view);
-        return layout;
+        return view;
     }
 
     @Override

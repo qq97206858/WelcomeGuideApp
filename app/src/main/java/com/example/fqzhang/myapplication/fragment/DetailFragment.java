@@ -7,24 +7,33 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.SparseLongArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fqzhang.myapplication.MainActivity;
 import com.example.fqzhang.myapplication.R;
+import com.example.fqzhang.myapplication.Util.DeviceUtil;
 import com.example.fqzhang.myapplication.Util.FragmentExchangeController;
 import com.example.fqzhang.myapplication.view.PercentView;
 import com.example.fqzhang.myapplication.view.RandomNumView;
+import com.example.fqzhang.myapplication.view.TextImage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -47,6 +56,10 @@ public class DetailFragment extends Fragment {
     public Button btn;
     @BindView(R.id.onclick)
     public TextView tv;
+    @BindView(R.id.textImage)
+    public TextImage textImage;
+    @BindView(R.id.needLetter)
+    public EditText needLetter;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -102,12 +115,6 @@ public class DetailFragment extends Fragment {
                 showDialog();
             }
         });
-/*        percentView.setChangeProgresslistener(new PercentView.OnChangeProgressListener() {
-            @Override
-            public void onChangeProgress(PercentView view) {
-
-            }
-        });*/
         return view;
     }
     public void showDialog(){
@@ -124,6 +131,23 @@ public class DetailFragment extends Fragment {
         });
         builder.create().show();*/
 
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("total","3");
+            JSONArray array = new JSONArray();
+            for(int i=0;i<3;i++) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("id",i);
+                jsonObject1.put("name","zfq"+i);
+                jsonObject1.put("null",null);
+                Log.e("zfq",jsonObject1.getString("null"));
+                array.put(i,jsonObject1);
+            }
+            jsonObject.put("arrayData",array);
+            Log.e("zfq",jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         MDialogFragment dialogFragment = MDialogFragment.newInstance();
         FragmentManager fragmentManager = getFragmentManager();
         android.app.FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -165,10 +189,11 @@ public class DetailFragment extends Fragment {
         super.onDestroyView();
         Log.e("detailFragment","----onDestroyView");
     }
-/*    @OnClick(R.id.downLoad)
-    public void load(){
-
-    }*/
+    @OnClick(R.id.downLoad)
+    public void change(){
+        textImage.setText(needLetter.getText().toString());
+        textImage.setTextSize(DeviceUtil.getPixelFromDip(getActivity(),25));
+    }
     boolean flag = false;
     @OnClick(R.id.onclick)
     public  void onclick() {

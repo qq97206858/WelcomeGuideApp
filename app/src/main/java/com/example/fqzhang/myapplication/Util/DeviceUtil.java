@@ -369,8 +369,8 @@ public class DeviceUtil {
         return (int)(TypedValue.applyDimension(1, dip, dm) + 0.5F);
     }
 
-    public static int getPixelFromDip(float dip) {
-        return (int)(TypedValue.applyDimension(1, dip, FoundationContextHolder.context.getResources().getDisplayMetrics()) + 0.5F);
+    public static int getPixelFromDip(Context context,float dip) {
+        return (int)(TypedValue.applyDimension(1, dip, context.getResources().getDisplayMetrics()) + 0.5F);
     }
 
     public static boolean isARMCPU() {

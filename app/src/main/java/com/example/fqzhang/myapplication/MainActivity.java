@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,13 +34,16 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fqzhang.myapplication.Util.CustomTranslateUtil;
+import com.example.fqzhang.myapplication.fragment.FlexboxLayoutFragment;
 import com.example.fqzhang.myapplication.fragment.MDialogFragment;
 
 import java.util.ArrayList;
@@ -48,11 +52,19 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static android.R.attr.fragment;
 
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.list_container)
+    protected RelativeLayout container;
+    @BindView(R.id.show_content)
+    protected FrameLayout content;
+    public FragmentManager fragmentManager;
     private List<View> transitionViewList = new ArrayList<>();
     private List<String> datas = new ArrayList<>();
-    private TextView reloadTextView, getfirstVisibleTv, chatTextView, emailTextView, telTextView;
+    private TextView reloadTextView, getfirstVisibleTv, chatTextView, emailTextView, telTextView,flexboxLayout;
     private ListView showlistView;
     private MyAdapter mAdapter;
     private boolean isReLoad;
@@ -75,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initData();
         initView();
         bindData(false);
@@ -330,9 +343,18 @@ public class MainActivity extends AppCompatActivity {
         emailTextView = (TextView) findViewById(R.id.tv_email);
         telTextView = (TextView) findViewById(R.id.tv_tel);
         fab = (FloatingActionButton) findViewById(R.id.bMain_Float);
+    }
+    @OnClick(R.id.flexboxLayout)
+    public void showFlexLayout(){
+        container.setVisibility(View.INVISIBLE);
+        content.setVisibility(View.VISIBLE);
+        FlexboxLayoutFragment fragment = new FlexboxLayoutFragment();
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.add(R.id.show_content,fragment,FlexboxLayoutFragment.class.getName());
+        ft.commit();
 
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void initData() {
         datas.clear();
@@ -578,5 +600,16 @@ public class MainActivity extends AppCompatActivity {
             bottomView.startAnimation(fadeAnim);
             transitionViewList.add(bottomView);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( content.getVisibility() == View.VISIBLE) {
+            container.setVisibility(View.VISIBLE);
+            content.setVisibility(View.INVISIBLE);
+            return false;
+        }
+        //fragmentManager.getFragments().clear();
+        return super.onKeyDown(keyCode, event);
     }
 }
