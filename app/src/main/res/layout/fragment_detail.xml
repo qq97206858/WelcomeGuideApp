@@ -87,5 +87,13 @@
             zfq:titleTextColor="#8888ee"
             zfq:titleTextSize="20dp"
             />
+        <com.example.fqzhang.myapplication.view.MyView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/myView"
+            zfq:mText="hello"
+            zfq:mTextSize="19dp"
+            />
 
 </LinearLayout>

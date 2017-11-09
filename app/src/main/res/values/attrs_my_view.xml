@@ -1,0 +1,7 @@
+<resources>
+
+    <declare-styleable name="MyView">
+        <attr name="mText" format="string"/>
+        <attr name="mTextSize" format="dimension"/>
+    </declare-styleable>
+</resources>

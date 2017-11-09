@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.fqzhang.myapplication.fragment.DetailFragment;
+import com.example.fqzhang.myapplication.fragment.DetailFragment2;
 import com.example.fqzhang.myapplication.view.TextImage;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 import static android.R.id.list;
 import static android.R.id.text1;
 
-public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener {
+public class DetailActivity extends AppCompatActivity implements DetailFragment.OnFragmentInteractionListener,DetailFragment2.OnFragmentInteractionListener {
     static class T {
         public List<String> text = new ArrayList<>()/* Arrays.asList(new String[]{"dd","dd"})*/;
     }
@@ -35,9 +36,9 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
         System.out.println(t.text);
     }
     public static void method(List<String> text){
-        /*text = Arrays.asList(new String[]{"xx","xx"});*/
-        text.add("kk");
-        text.add("kk");
+        text = Arrays.asList(new String[]{"xx","xx"});
+        /*text.add("kk");
+        text.add("kk");*/
     }
     private Fragment fragment;
     @Override
@@ -49,7 +50,12 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
         setContentView(R.layout.activity_detail);
         FragmentManager fragmentManager = getFragmentManager();
         Bundle args = getIntent().getExtras();
-        fragment = DetailFragment.newInstance(args.getString("detail"),args.getInt("position")+"");
+        int sourceType = args.getInt("sourceType");
+        if (sourceType == 0) {
+            fragment = DetailFragment.newInstance(args.getString("detail"),args.getInt("position")+"");
+        } else if (sourceType == 1) {
+            fragment = DetailFragment2.newInstance("","");
+        }
         addFragment(fragmentManager,fragment ,android.R.id.content,"detailFragment");
     }
 

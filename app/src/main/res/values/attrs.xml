@@ -13,4 +13,27 @@
         <attr name="precent_progress_color" format="color"/>
         <attr name="precent_background_color" format="color"/>
     </declare-styleable>
+
+    <!--CompoundDrawablesTextView的style-->
+    <declare-styleable name="CompoundDrawablesTextView">
+        <attr name="Compound_Drawables_TextView_Style" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="TextImage">
+        <attr name="titleText" format="string"/>
+        <attr name="titleTextSize" format="dimension"/>
+        <attr name="titleTextColor" format="color"/>
+        <attr name="titleDrawable" format="color|reference"/>
+        <attr name="imageScaleType" >
+            <enum name="fillXY" value="0"/>
+            <enum name="center" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="RandomNumView">
+        <attr name="RandomNumSize" format="dimension"/>
+        <attr name="RandomNumColor" format="color"/>
+        <attr name="BackgroundColor" format="color"/>
+        <attr name="RandomNumText" format="string"/>
+    </declare-styleable>
 </resources>

@@ -11,7 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.fqzhang.myapplication.R;
 
@@ -69,7 +71,7 @@ public class PercentView extends View {
 
     }
 
-    private void randomProgress() {
+    private void randomProgress() {TextPaint textPaint;
         Random r = new Random();
         progress = r.nextInt(100);
     }

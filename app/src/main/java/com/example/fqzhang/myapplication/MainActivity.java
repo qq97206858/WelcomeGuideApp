@@ -5,8 +5,14 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableWrapper;
+import android.graphics.drawable.InsetDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -200,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         });
         showlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
                 final int pos = position - 1;
                 if (!datas.get(pos).contains(":")) {
                     view.setEnabled(false);
@@ -218,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
                         Bundle bundle = new Bundle();
                         bundle.putInt("position", pos);
                         bundle.putString("detail", datas.get(pos));
+                        bundle.putInt("sourceType",position%2);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         MainActivity.this.overridePendingTransition(0,0);
@@ -336,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         mTopView = findViewById(R.id.ll_btn);
         reloadTextView = (TextView) findViewById(R.id.tv_reload);
         showlistView = (ListView) findViewById(R.id.lv_main);
-        //showlistView.setSelector(R.drawable.itemselector);
+        showlistView.setSelector(R.drawable.itemselector);
         bottomView = (LinearLayout) findViewById(R.id.bottom_layout);
         getfirstVisibleTv = (TextView) findViewById(R.id.tv_getFirstVisible);
         chatTextView = (TextView) findViewById(R.id.tv_chat);

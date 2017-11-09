@@ -43,18 +43,21 @@
                 android:text="FlexboxLayout"
                 />
         </LinearLayout>
-
+        <!--android:dividerHeight="1dp"
+        android:divider="@drawable/list_divider"-->
         <ListView
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:id="@+id/lv_main"
             android:layout_width="match_parent"
+            android:dividerHeight="0dp"
             android:divider="#ffffffff"
-            android:dividerHeight="4dp"
-            android:listSelector="#eeeeee"
+            android:cacheColorHint="#ffffffff"
+            android:descendantFocusability="blocksDescendants"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_btn"/>
 
+        <!--android:listSelector="#eeeeee"-->
         <android.support.design.widget.FloatingActionButton
             android:layout_marginBottom="80dp"
             android:id="@+id/bMain_Float"

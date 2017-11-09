@@ -124,7 +124,6 @@ public class DeviceUtil {
                         }
                     }
                 } catch (SocketException var10) {
-                    ;
                 }
             }
 
@@ -170,7 +169,6 @@ public class DeviceUtil {
             try {
                 return StringUtil.getUnNullString(telephonyManager.getDeviceId());
             } catch (Exception var2) {
-                ;
             }
         }
 
@@ -183,7 +181,6 @@ public class DeviceUtil {
             try {
                 return StringUtil.getUnNullString(telephony.getSubscriberId());
             } catch (SecurityException var2) {
-                ;
             }
         }
 
@@ -209,8 +206,8 @@ public class DeviceUtil {
 
         try {
             Class e = Class.forName("android.os.SystemProperties");
-            Method getMethod = e.getMethod("get", new Class[]{String.class, String.class});
-            Object obj = getMethod.invoke(e, new Object[]{"ro.serialno", "unknown"});
+            Method getMethod = e.getMethod("get", String.class, String.class);
+            Object obj = getMethod.invoke(e, "ro.serialno", "unknown");
             if(obj != null && obj instanceof String) {
                 serialNum = (String)obj;
             }
@@ -258,7 +255,6 @@ public class DeviceUtil {
                     }
                 }
             } catch (Exception var3) {
-                ;
             }
 
             systemRootState = 0;
@@ -765,7 +761,6 @@ public class DeviceUtil {
                 sb.append("_CtripAPP_Android_").append(getAppVersion());
             }
         } catch (Exception var6) {
-            ;
         }
 
         return sb.toString();
