@@ -1,9 +1,11 @@
 package com.example.fqzhang.myapplication.Util;
 
+import android.content.Context;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
+import android.view.WindowManager;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,10 +30,6 @@ public class StringUtil {
     static final int[] vi = new int[]{1, 0, 88, 9, 8, 7, 6, 5, 4, 3, 2};
     public static final String EMPTY = "";
     private static final Pattern URI_FILE_PATTERN = Pattern.compile("\\.(zip|rar|tar|apk|gz|z|exe|dmg|wav|mp3|mpeg|rm|avi|ram|doc|ppt|pdf|xls|xlsx|rtf|tmp|bat|shell|swf)$");
-
-    public StringUtil() {
-    }
-
     public static String getUnNullString(String inStr) {
         if(emptyOrNull(inStr)) {
             inStr = "";
@@ -82,6 +80,11 @@ public class StringUtil {
         return flag;
     }
 
+    public static int getPxFromDP (Context context,int dp) {
+        float scale = context.getResources().getDisplayMetrics().density;
+
+        return (int)(dp*scale+0.5f);
+    }
     public static boolean emptyOrNull(String str) {
         return str == null || str.length() == 0;
     }

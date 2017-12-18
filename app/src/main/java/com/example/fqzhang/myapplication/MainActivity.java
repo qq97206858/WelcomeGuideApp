@@ -12,7 +12,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,11 +52,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fqzhang.myapplication.Util.CustomTranslateUtil;
+import com.example.fqzhang.myapplication.Util.ZUtil;
 import com.example.fqzhang.myapplication.fragment.FlexboxLayoutFragment;
 import com.example.fqzhang.myapplication.fragment.MDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -88,11 +93,25 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFirstShow = false;
     private FloatingActionButton fab;
     private View mTopView;
+    private MyAdapter.OnClickListener mAdapterOnClickListener= new MyAdapter.OnClickListener(){
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void bottomExpand(boolean isExpand) {
+            if (isExpand) {
+                initDataNew();
+            } else {
+                initData();
+            }
+            mAdapter.notifyDataSetInvalidated();
+        }
+    };
     @TargetApi(Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        View view = View.inflate(this,R.layout.activity_main,null);
+        view.setBackground(ZUtil.getGradientBG(R.color.colorAccent));
+        setContentView(view);
         ButterKnife.bind(this);
         initData();
         initView();
@@ -332,6 +351,7 @@ public class MainActivity extends AppCompatActivity {
             mAdapter.notifyDataSetInvalidated();
         } else {
             mAdapter = new MyAdapter(datas, this);
+            mAdapter.setOnClickListener(mAdapterOnClickListener);
             //showlistView.setLayoutAnimation(getAnimationController());
             showlistView.addHeaderView(View.inflate(this, R.layout.listheader, null));
             showlistView.setAdapter(mAdapter);
@@ -369,25 +389,71 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 30; i++) {
             int num = r.nextInt(50);
             if (i < 10) {
+                if (i == 0) {
+                    datas.add("Z");
+                }
                 datas.add("张三" + num + ":" + "张三 hello world" + num);
+                if (i == 9) {
+                    datas.add("展开∨");
+                }
             } else if (i < 20) {
+                if (i == 10) {
+                    datas.add("Q");
+                }
                 datas.add("钱一" + num + ":" + "钱一 hello world" + num);
             } else {
+                if (i == 20 ) {
+                    datas.add("W");
+                }
                 datas.add("王二" + num + ":" + "王二 hello world" + num);
             }
         }
-        datas.add(0, "Z");
-        datas.add(11, "Q");
-        datas.add(22, "Q");
+
+    }
+    private void initDataNew() {
+        datas.clear();
+        Random r = new Random();
+        for (int i = 0; i < 30; i++) {
+            int num = r.nextInt(50);
+            if (i < 10) {
+                if (i == 0 ) {
+                    datas.add("Z");
+                }
+                if (i == 9) {
+                    for (int j = 0;j<5;j++) {
+                        datas.add("张三" + num + j + ":" + "张三 hello world" + num + j);
+                    }
+                    datas.add("收起∧");
+                    continue;
+                }
+                datas.add("张三" + num + ":" + "张三 hello world" + num);
+            } else if (i < 20) {
+                if (i == 10) {
+                    datas.add("Q");
+                }
+                datas.add("钱一" + num + ":" + "钱一 hello world" + num);
+            } else {
+                if (i == 20) {
+                    datas.add("W");
+                }
+                datas.add("王二" + num + ":" + "王二 hello world" + num);
+            }
+        }
     }
 
-    class MyAdapter extends BaseAdapter {
-        private final int VIEW_TYPE_COUNT = 2;
+    static class MyAdapter extends BaseAdapter {
+        private final int VIEW_TYPE_COUNT = 3;
         private final int TYPE_NORMAL = 0;
         private final int TYPE_CHAR = 1;
+        private final int TYPE_BOTTOM = 2;
         private List<String> datas;
         private LayoutInflater inflater;
         private Context context;
+        private OnClickListener onClickListener;
+
+        public void setOnClickListener(OnClickListener onClickListener) {
+            this.onClickListener = onClickListener;
+        }
 
         public MyAdapter(List datas, Context context) {
             this.datas = datas;
@@ -397,10 +463,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemViewType(int position) {
-            if (!datas.get(position).contains(":")) {
+            if (datas.get(position).contains(":")) {
+                return TYPE_NORMAL;
+            } else if(datas.get(position).length() == 1){
                 return TYPE_CHAR;
             } else {
-                return TYPE_NORMAL;
+                return TYPE_BOTTOM;
             }
         }
 
@@ -431,8 +499,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             boolean hasConvertView = convertView != null;
+            int type = getItemViewType(position);
             ViewHolder holder = null;
-            if (getItemViewType(position) == TYPE_NORMAL) {
+            if (type == TYPE_NORMAL) {
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.item, null, false);
                     holder = new ViewHolderNormal(convertView);
@@ -445,7 +514,7 @@ public class MainActivity extends AppCompatActivity {
                 String[] data = datas.get(position).split(":");
                 ((ViewHolderNormal)holder).tvName.setText(data[0]);
                 ((ViewHolderNormal)holder).tvItem.setText(data[1]);
-            } else {
+            } else if (type == TYPE_CHAR){
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.type, null, false);
                     holder = new ViewHolderType(convertView);
@@ -455,6 +524,31 @@ public class MainActivity extends AppCompatActivity {
                     holder = (ViewHolderType) convertView.getTag();
                 }
                 ((ViewHolderType)holder).tvType.setText(datas.get(position));
+
+            } else if (type == TYPE_BOTTOM) {
+                convertView = inflater.inflate(R.layout.type, null, false);
+                final String data = datas.get(position);
+                final TextView tv = (TextView) convertView.findViewById(R.id.tv_type);
+                tv.setText(data);
+                tv.setGravity(Gravity.CENTER);
+                tv.setBackgroundColor(Color.parseColor("#ffffff"));
+                /*tv.setTag(true);*/
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+      /*                  boolean expand = (boolean) tv.getTag();
+                        if (expand) {
+                            tv.setText("展开∨");
+                        } else {
+                            tv.setText("收起∧");
+                        }
+                        tv.setTag(!expand);*/
+                        boolean expand = "展开∨".equals(data);
+                        if (onClickListener != null) {
+                            onClickListener.bottomExpand(expand);
+                        }
+                    }
+                });
             }
             setItemAnim(convertView, position,hasConvertView);
             return convertView;
@@ -510,8 +604,10 @@ public class MainActivity extends AppCompatActivity {
                 convertView.setAnimation(set);
             }
         }
+        interface OnClickListener {
+            void bottomExpand(boolean isExpand);
+        }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -619,4 +715,5 @@ public class MainActivity extends AppCompatActivity {
         //fragmentManager.getFragments().clear();
         return super.onKeyDown(keyCode, event);
     }
+
 }

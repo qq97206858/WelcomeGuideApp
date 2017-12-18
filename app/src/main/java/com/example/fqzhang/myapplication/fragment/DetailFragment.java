@@ -8,9 +8,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.SparseLongArray;
@@ -27,6 +33,7 @@ import com.example.fqzhang.myapplication.MainActivity;
 import com.example.fqzhang.myapplication.R;
 import com.example.fqzhang.myapplication.Util.DeviceUtil;
 import com.example.fqzhang.myapplication.Util.FragmentExchangeController;
+import com.example.fqzhang.myapplication.Util.ZUtil;
 import com.example.fqzhang.myapplication.view.PercentView;
 import com.example.fqzhang.myapplication.view.RandomNumView;
 import com.example.fqzhang.myapplication.view.TextImage;
@@ -100,10 +107,12 @@ public class DetailFragment extends Fragment {
         Log.e("detailFragment","----onCreate");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, new FrameLayout(getActivity()), false);
+        view.setBackground(ZUtil.getGradientBG(R.color.colorAccent));
         TextView detail = (TextView) view.findViewById(R.id.show_detail_tv);
 /*        Button btn = (Button) view.findViewById(R.id.show_dialog_btn);*/
         detail.setText("position:"+mParam2+":::"+mParam1);
@@ -249,4 +258,5 @@ public class DetailFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
