@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.Seriable;
 import com.example.fqzhang.myapplication.fragment.DetailFragment;
 import com.example.fqzhang.myapplication.fragment.DetailFragment2;
 import com.example.fqzhang.myapplication.view.TextImage;
@@ -40,6 +41,7 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
         /*text.add("kk");
         text.add("kk");*/
     }
+    @Seriable
     private Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

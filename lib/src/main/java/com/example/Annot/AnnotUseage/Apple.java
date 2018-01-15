@@ -13,7 +13,7 @@ public class Apple {
     private String appleName;
     @FruitColor(fruitColor = FruitColor.Color.GREEN)
     private String appleColor;
-    @FruitProvider(id = 1,name = "çº¢å¯Œå£«é›†å›¢",address = "æ²³å—å¼€å°")
+    @FruitProvider(id = 1,name = "ºì¸»Ê¿¼¯ÍÅ",address = "ºÓÄÏ¿ª·â")
     private String appleProvider;
     public void setAppleColor(String appleColor) {
         this.appleColor = appleColor;
@@ -38,6 +38,6 @@ public class Apple {
     }
 
     public void displayName(){
-        System.out.println("æ°´æœçš„åå­—æ˜¯ï¼šè‹¹æœ");
+        System.out.println("Ë®¹ûµÄÃû×ÖÊÇ£ºÆ»¹û");
     }
 }

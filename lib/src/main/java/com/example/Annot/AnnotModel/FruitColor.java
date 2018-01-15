@@ -5,13 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.ANNOTATION_TYPE.FIELD)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FruitColor {
     public enum Color{BLUE,RED,GREEN};
 
     /**
-     * é¢œè‰²å±žæ€§
+     * ÑÕÉ«ÊôÐÔ
      * @return
      */
     Color fruitColor()  default Color.GREEN;

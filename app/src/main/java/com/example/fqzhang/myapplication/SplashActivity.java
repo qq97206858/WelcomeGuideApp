@@ -6,8 +6,14 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class SplashActivity extends AppCompatActivity {
+import com.example.InjectPrint;
+import com.example.Seriable;
 
+import butterknife.OnClick;
+@Seriable
+@InjectPrint("SplashActivity")
+public class SplashActivity extends AppCompatActivity {
+    @InjectPrint("oncreate")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

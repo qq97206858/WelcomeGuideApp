@@ -6,24 +6,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.ANNOTATION_TYPE.FIELD)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface FruitProvider {
     /**
-     * ä¾›åº”å•†ç¼–å·
+     * ¹©Ó¦ÉÌ±àºÅ
      * @return
      */
     public int id() default -1;
 
     /**
-     * ä¾›åº”å•†åç§°
+     * ¹©Ó¦ÉÌÃû³Æ
      * @return
      */
     public String name() default "";
 
     /**
-     * ä¾›åº”å•†åœ°å€
+     * ¹©Ó¦ÉÌµØÖ·
      * @return
      */
     public String address() default "";

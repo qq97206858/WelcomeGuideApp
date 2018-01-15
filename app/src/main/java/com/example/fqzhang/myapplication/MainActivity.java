@@ -51,6 +51,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.Seriable;
 import com.example.fqzhang.myapplication.Util.CustomTranslateUtil;
 import com.example.fqzhang.myapplication.Util.ZUtil;
 import com.example.fqzhang.myapplication.fragment.FlexboxLayoutFragment;
@@ -64,9 +65,7 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.R.attr.fragment;
-
+@Seriable
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.list_container)
     protected RelativeLayout container;
