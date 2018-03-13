@@ -2,9 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/beananno/src/main/java/com/example/BeanAnnotationProcessor.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/Annot/AnnotModel/FruitColor.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/Annot/AnnotModel/FruitProvider.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/Annot/AnnotUseage/Apple.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/Annot/AnnotModel/Company.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/Annot/AnnotModel/EmployeeSex.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/Annot/AnnotUseage/EmployeeInfo.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/lib/src/main/java/com/example/MyClass.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/myanno/src/main/java/com/example/InjectPrintProcessor.java" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />

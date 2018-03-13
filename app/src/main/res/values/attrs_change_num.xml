@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="ChangeNum">
+        <attr name="currentNum" format="string"/>
+        <attr name="NumDimension" format="dimension"/>
+        <attr name="exampleColor" format="color"/>
+        <attr name="leftIcon" format="color|reference"/>
+        <attr name="rightIcon" format="color|reference"/>
+    </declare-styleable>
+</resources>

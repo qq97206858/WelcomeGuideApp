@@ -4,7 +4,11 @@ android {
     compileOptions {
         encoding "UTF-8"
     }
-
+    allprojects {
+        repositories {
+            maven { url 'https://jitpack.io' }
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -36,7 +40,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.google.protobuf:protobuf-java:3.0.0'
-    compile project(':myanno')
-    compile project(':beananno')
+    compile 'com.github.romainguy:ViewServer:-SNAPSHOT'
 }
 

@@ -1,6 +1,8 @@
 package com.example.fqzhang.myapplication;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +53,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.debug.hv.ViewServer;
 import com.example.Seriable;
 import com.example.fqzhang.myapplication.Util.CustomTranslateUtil;
 import com.example.fqzhang.myapplication.Util.ZUtil;
@@ -83,15 +86,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isVisible = false;
     private PopupWindow pop;
     private SharedPreferences sp;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
     private boolean isFirstShow = false;
     private FloatingActionButton fab;
     private View mTopView;
+    int screenWidth = 0;
+    int screenHeight = 0;
     private MyAdapter.OnClickListener mAdapterOnClickListener= new MyAdapter.OnClickListener(){
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -112,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         view.setBackground(ZUtil.getGradientBG(R.color.colorAccent));
         setContentView(view);
         ButterKnife.bind(this);
+        ViewServer.get(this).addWindow(this);
         initData();
         initView();
         bindData(false);
@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
                 if (reloadTextView.getMeasuredWidth() > 0) {
                     showPop();
                     reloadTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    screenWidth = MainActivity.this.getWindow().getDecorView().getWidth();
+                    screenHeight = MainActivity.this.getWindow().getDecorView().getHeight();
                 }
             }
         });
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.e("MainActivity", "onResume");
         clearListTransitionAnims();
+        ViewServer.get(this).setFocusedWindow(this);
     }
 
     @Override
@@ -182,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setListener() {
         reloadTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,8 +296,63 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "this is a floatActionButton!", Toast.LENGTH_SHORT).show();
             }
         });
+        fab.setOnTouchListener(onTouchListener);
     }
 
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+        int mLastX = 0;
+        int mLastY = 0;
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int currentX = (int) event.getRawX();
+            int currentY = (int) event.getRawY();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mLastX = currentX;
+                    mLastY= currentY;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    int distance = currentX - mLastX + currentY - mLastY;
+                    Log.e("DIstance",distance+"");
+                    if (Math.abs(distance)<20) {
+                        //当变化太小的时候什么都不做 OnClick执行
+                    }else {
+                        return true;
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    int deltaX =  currentX - mLastX;
+                    int deltaY = currentY - mLastY;
+                    int l = v.getLeft() + deltaX;
+                    int b = v.getBottom() + deltaY;
+                    int r = v.getRight() + deltaX;
+                    int t = v.getTop() + deltaY;
+                    // 下面判断移动是否超出屏幕
+                    if (l < 0) {
+                        l = 0;
+                        r = v.getWidth();
+                    }
+                    if (t < 0) {
+                        t = 0;
+                        b = v.getHeight();
+                    }
+                    if (r > screenWidth) {
+                        r = screenWidth;
+                        l = r - v.getWidth();
+                    }
+                    if (b > screenHeight) {
+                        b = screenHeight;
+                        t = b - v.getHeight();
+                    }
+                    v.layout(l,t,r,b);
+                    v.postInvalidate();
+                    mLastX = currentX;
+                    mLastY = currentY;
+                    break;
+            }
+            return false;
+        }
+    };
     private void showPop() {
         sp = getPreferences(Context.MODE_APPEND);
         boolean isFirstShow = sp.getBoolean("isFirstShow", false);
@@ -615,6 +674,7 @@ public class MainActivity extends AppCompatActivity {
             pop = null;
         }
         Log.e("MainActivity", "onDestroy");
+        ViewServer.get(this).removeWindow(this);
     }
 
     /**

@@ -8,22 +8,21 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface FruitProvider {
+public @interface Company {
     /**
-     * 供应商编号
+     * 公司注册编号
      * @return
      */
     public int id() default -1;
 
     /**
-     * 供应商名称
+     * 公司名称
      * @return
      */
     public String name() default "";
 
     /**
-     * 供应商地址
+     * 公司地址
      * @return
      */
     public String address() default "";

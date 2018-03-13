@@ -95,12 +95,12 @@
             zfq:mText="hello"
             zfq:mTextSize="19dp"
             />
-        <ImageView
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/test"
+        <com.example.fqzhang.myapplication.view.ChangeNum
+            android:id="@+id/chang_num_view"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            zfq:currentNum="0"
+            zfq:rightIcon="@drawable/change_num_add"
+            zfq:leftIcon="@mipmap/ic_launcher"
             />
-
 </LinearLayout>

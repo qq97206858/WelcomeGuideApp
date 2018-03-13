@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.example.fqzhang.myapplication.R;
 import com.example.fqzhang.myapplication.Util.DeviceUtil;
 import com.example.fqzhang.myapplication.Util.FragmentExchangeController;
 import com.example.fqzhang.myapplication.Util.ZUtil;
+import com.example.fqzhang.myapplication.view.ChangeNum;
 import com.example.fqzhang.myapplication.view.PercentView;
 import com.example.fqzhang.myapplication.view.RandomNumView;
 import com.example.fqzhang.myapplication.view.TextImage;
@@ -67,6 +69,8 @@ public class DetailFragment extends Fragment {
     public TextImage textImage;
     @BindView(R.id.needLetter)
     public EditText needLetter;
+    @BindView(R.id.chang_num_view)
+    public ChangeNum changeNum;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -122,6 +126,22 @@ public class DetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showDialog();
+            }
+        });
+        changeNum.setCurrentNum(5);
+        changeNum.setOnClickCallBack(new ChangeNum.OnClickCallBack() {
+            @Override
+            public int leftBtnClick(ImageView leftBtn) {
+                if (changeNum.getCurrentNum() == 0) {
+                    leftBtn.setEnabled(false);
+                    return 0;
+                }
+                return -1;
+            }
+
+            @Override
+            public int rightBtnClick(ImageView leftBtn) {
+                return +1;
             }
         });
         return view;

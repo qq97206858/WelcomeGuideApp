@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,5 +41,28 @@ public class ZUtil extends StringUtil{
         layers[1] = gradientDrawable;//前景色
         LayerDrawable layerDrawable = new LayerDrawable(layers);
         return layerDrawable;
+    }
+    /**
+     * 判断一个日期是不是有效的八位日期
+     * @param str 八位时间str
+     * @return true为有效时间
+     */
+    public static boolean isValidDate(String str) {
+        boolean convertSuccess = true;
+        // 指定日期格式为四位年两位月份两位日期，注意yyyyMMdd区分大小写；
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        try {
+            // 设置lenient为false.
+            // 否则SimpleDateFormat会比较宽松地验证日期，比如20070229会被接受，并转换成20070301
+            format.setLenient(false);
+            format.parse(str);
+        } catch (ParseException e) {
+            // e.printStackTrace();
+            // 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
+            convertSuccess = false;
+        } catch (NullPointerException e){
+            convertSuccess = false;
+        }
+        return convertSuccess;
     }
 }

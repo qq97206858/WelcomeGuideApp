@@ -2,7 +2,9 @@ package com.example.fqzhang.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -13,8 +15,9 @@ import butterknife.OnClick;
 @Seriable
 @InjectPrint("SplashActivity")
 public class SplashActivity extends AppCompatActivity {
-    @InjectPrint("oncreate")
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
+    @InjectPrint("oncreate")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);

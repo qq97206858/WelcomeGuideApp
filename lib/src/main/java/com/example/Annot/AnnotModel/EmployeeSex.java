@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FruitName {
-    String value () default "";
+public @interface EmployeeSex {
+    enum Sex{Man,Woman}//
+    Sex employeeSex()  default Sex.Man;
 }
