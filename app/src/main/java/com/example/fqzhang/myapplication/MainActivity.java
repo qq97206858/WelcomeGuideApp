@@ -61,6 +61,7 @@ import com.example.fqzhang.myapplication.fragment.FlexboxLayoutFragment;
 import com.example.fqzhang.myapplication.fragment.MDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
@@ -775,4 +776,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private long lastClickTime = 0;
+    @Override
+    public void onBackPressed() {
+        long currentClickTime = new Date().getTime();
+        if ((currentClickTime - lastClickTime) < 1000) {
+            finish();
+        } else {
+            Toast.makeText(this,"再按一次退出",Toast.LENGTH_LONG).show();
+        }
+        lastClickTime = currentClickTime;
+
+    }
 }
